@@ -37,27 +37,45 @@ defmodule RastreadorHabitosSustentaveisWeb.Layouts do
     ~H"""
     <header class="navbar px-4 sm:px-6 lg:px-8">
       <div class="flex-1">
-        <a href="/" class="flex-1 flex w-fit items-center gap-2">
-          <img src={~p"/images/logo.svg"} width="36" />
-          <span class="text-sm font-semibold">v{Application.spec(:phoenix, :vsn)}</span>
+        <a href="/" class="text-xl font-bold text-primary tracking-wide">
+          Rastreador Sustentável
         </a>
       </div>
       <div class="flex-none">
         <ul class="flex flex-column px-1 space-x-4 items-center">
-          <li>
-            <a href="https://phoenixframework.org/" class="btn btn-ghost">Website</a>
-          </li>
-          <li>
-            <a href="https://github.com/phoenixframework/phoenix" class="btn btn-ghost">GitHub</a>
-          </li>
-          <li>
-            <.theme_toggle />
-          </li>
-          <li>
-            <a href="https://hexdocs.pm/phoenix/overview.html" class="btn btn-primary">
-              Get Started <span aria-hidden="true">&rarr;</span>
-            </a>
-          </li>
+          <%= if @current_scope && @current_scope.user do %>
+            <li>
+              <.theme_toggle />
+            </li>
+            <li>
+              <div class="dropdown dropdown-end">
+                <div tabindex="0" role="button" class="btn btn-ghost rounded-full pl-4 pr-1 py-1 flex items-center gap-3">
+                  <span class="text-sm font-medium hidden sm:block"><%= @current_scope.user.email %></span>
+                  <div class="w-10 h-10 rounded-full bg-primary text-primary-content grid place-items-center">
+                    <span class="text-lg font-bold"><%= String.at(@current_scope.user.name || "U", 0) |> String.upcase() %></span>
+                  </div>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                  <li>
+                    <.link navigate={~p"/users/settings"}>Configurações</.link>
+                  </li>
+                  <li>
+                    <.link href={~p"/users/log-out"} method="delete">Sair</.link>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          <% else %>
+            <li>
+              <.theme_toggle />
+            </li>
+            <li>
+              <.link navigate={~p"/users/register"} class="btn btn-ghost">Cadastrar</.link>
+            </li>
+            <li>
+              <.link navigate={~p"/users/log-in"} class="btn btn-primary">Entrar</.link>
+            </li>
+          <% end %>
         </ul>
       </div>
     </header>
