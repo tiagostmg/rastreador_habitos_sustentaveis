@@ -12,9 +12,23 @@ defmodule RastreadorHabitosSustentaveisWeb.UserLive.Settings do
       <div class="text-center">
         <.header>
           Account Settings
-          <:subtitle>Manage your account email address and password settings</:subtitle>
+          <:subtitle>Manage your account name, email address and password settings</:subtitle>
         </.header>
       </div>
+
+      <.form for={@name_form} id="name_form" phx-submit="update_name" phx-change="validate_name">
+        <.input
+          field={@name_form[:name]}
+          type="text"
+          label="Name"
+          autocomplete="name"
+          spellcheck="false"
+          required
+        />
+        <.button variant="primary" phx-disable-with="Changing...">Change Name</.button>
+      </.form>
+
+      <div class="divider" />
 
       <.form for={@email_form} id="email_form" phx-submit="update_email" phx-change="validate_email">
         <.input
@@ -85,12 +99,14 @@ defmodule RastreadorHabitosSustentaveisWeb.UserLive.Settings do
 
   def mount(_params, _session, socket) do
     user = socket.assigns.current_scope.user
+    name_changeset = Accounts.change_user_name(user)
     email_changeset = Accounts.change_user_email(user, %{}, validate_unique: false)
     password_changeset = Accounts.change_user_password(user, %{}, hash_password: false)
 
     socket =
       socket
       |> assign(:current_email, user.email)
+      |> assign(:name_form, to_form(name_changeset))
       |> assign(:email_form, to_form(email_changeset))
       |> assign(:password_form, to_form(password_changeset))
       |> assign(:trigger_submit, false)
@@ -99,6 +115,38 @@ defmodule RastreadorHabitosSustentaveisWeb.UserLive.Settings do
   end
 
   @impl true
+  def handle_event("validate_name", params, socket) do
+    %{"user" => user_params} = params
+
+    name_form =
+      socket.assigns.current_scope.user
+      |> Accounts.change_user_name(user_params)
+      |> Map.put(:action, :validate)
+      |> to_form()
+
+    {:noreply, assign(socket, name_form: name_form)}
+  end
+
+  def handle_event("update_name", params, socket) do
+    %{"user" => user_params} = params
+    user = socket.assigns.current_scope.user
+
+    case Accounts.update_user_name(user, user_params) do
+      {:ok, updated_user} ->
+        # Update current scope with new user data to reflect immediately in navbar
+        current_scope = %{socket.assigns.current_scope | user: updated_user}
+        info = "Name updated successfully."
+        
+        {:noreply, 
+          socket 
+          |> assign(current_scope: current_scope)
+          |> put_flash(:info, info)}
+
+      {:error, changeset} ->
+        {:noreply, assign(socket, :name_form, to_form(changeset, action: :insert))}
+    end
+  end
+
   def handle_event("validate_email", params, socket) do
     %{"user" => user_params} = params
 

@@ -42,20 +42,29 @@ defmodule RastreadorHabitosSustentaveisWeb.Layouts do
         </a>
       </div>
       <div class="flex-none">
-        <ul class="flex flex-column px-1 space-x-4 items-center">
+        <ul class="flex flex-row px-1 space-x-4 items-center">
           <%= if @current_scope && @current_scope.user do %>
             <li>
               <.theme_toggle />
             </li>
             <li>
               <div class="dropdown dropdown-end">
-                <div tabindex="0" role="button" class="btn btn-ghost rounded-full pl-4 pr-1 py-1 flex items-center gap-3">
-                  <span class="text-sm font-medium hidden sm:block"><%= @current_scope.user.email %></span>
-                  <div class="w-10 h-10 rounded-full bg-primary text-primary-content grid place-items-center">
-                    <span class="text-lg font-bold"><%= String.at(@current_scope.user.name || "U", 0) |> String.upcase() %></span>
+                <div
+                  tabindex="0"
+                  role="button"
+                  class="btn btn-ghost rounded-full pl-4 pr-1 flex items-center gap-3"
+                >
+                  <span class="text-sm font-medium hidden sm:block">{@current_scope.user.email}</span>
+                  <div class="w-7 h-7 rounded-full bg-primary text-primary-content grid place-items-center">
+                    <span class="text-sm font-bold">
+                      {String.at(@current_scope.user.name || "U", 0) |> String.upcase()}
+                    </span>
                   </div>
                 </div>
-                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                <ul
+                  tabindex="0"
+                  class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+                >
                   <li>
                     <.link navigate={~p"/users/settings"}>Configurações</.link>
                   </li>

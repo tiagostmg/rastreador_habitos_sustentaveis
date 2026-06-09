@@ -26,6 +26,15 @@ defmodule RastreadorHabitosSustentaveis.Accounts.User do
   end
 
   @doc """
+  A user changeset for changing the name.
+  """
+  def name_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:name])
+    |> validate_required([:name])
+  end
+
+  @doc """
   A user changeset for registering or changing the email.
 
   It requires the email to change otherwise an error is added.
