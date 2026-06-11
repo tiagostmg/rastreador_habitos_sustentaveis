@@ -26,9 +26,12 @@ defmodule RastreadorHabitosSustentaveisWeb.HomeLive do
               Estamos felizes em ter você aqui. Acompanhe seus hábitos diários, ganhe pontos e ajude a construir um futuro mais sustentável para todos nós.
             </p>
             <div class="flex gap-4 justify-center mt-4">
-              <button class="btn btn-primary btn-lg shadow-lg shadow-primary/30 transition-transform hover:scale-105">
+              <.link
+                navigate={~p"/habits"}
+                class="btn btn-primary btn-lg shadow-lg shadow-primary/30 transition-transform hover:scale-105"
+              >
                 Meus Hábitos
-              </button>
+              </.link>
               <.link
                 navigate={~p"/users/settings"}
                 class="btn btn-outline btn-lg transition-transform hover:scale-105"

@@ -47,6 +47,9 @@ defmodule RastreadorHabitosSustentaveisWeb.Layouts do
             <li>
               <.theme_toggle />
             </li>
+            <li class="hidden sm:block">
+              <.link navigate={~p"/habits"} class="btn btn-ghost">Hábitos</.link>
+            </li>
             <li>
               <div class="dropdown dropdown-end">
                 <div
@@ -65,6 +68,9 @@ defmodule RastreadorHabitosSustentaveisWeb.Layouts do
                   tabindex="0"
                   class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
                 >
+                  <li>
+                    <.link navigate={~p"/habits"}>Meus Hábitos</.link>
+                  </li>
                   <li>
                     <.link navigate={~p"/users/settings"}>Configurações</.link>
                   </li>
